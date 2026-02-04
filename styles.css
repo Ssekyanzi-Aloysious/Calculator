@@ -16,6 +16,7 @@
 }
 .hide{
     /* display: none; */
+    margin: 10px 0px;
     text-align: end;
     padding-top: .5rem;
     margin-right: .5rem;
@@ -25,12 +26,12 @@
 #resultDisplay{
     text-align: end;
     padding: .1rem 1rem;
-    font-size: 60px;
+    font-size: 50px;
     font-weight: 900;
     max-width: 100%;
 }
 
-#button,#operatorBtn,#calculateBtn {
+#button,#operatorBtn,#calculateBtn,#fbutton,#calculateBtn {
     background-color: rgb(27, 27, 27);
     height: 80px;
     width: 95px;
@@ -38,7 +39,7 @@
     align-items: center;
     justify-content: center;
 }
-#button:hover,#operatorBtn:hover{
+#button:hover,#operatorBtn:hover,#fbutton:hover,#calculateBtn:hover {
     background-color: rgb(88, 88, 88);
 }
 

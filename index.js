@@ -1,130 +1,105 @@
-const buttons = document.querySelectorAll(".btn");
+// -----------------------------------------------VARIABLES-----------------------------------
+let num1;
+let num2;
+let operator;
+let isNum1 = false;
+let resetDisplay = false;
+const logDisplay = document.querySelector("#logDisplay");
+const resultDisplay = document.querySelector("#resultDisplay");
+const fnBtns = document.querySelectorAll("#fbutton");
+const btns = document.querySelectorAll("#button");
 const operatorBtns = document.querySelectorAll("#operatorBtn");
-let num1, num2, operator, result;
-let resultDisplay = document.querySelector("#resultDisplay");
-let logDisplay = document.querySelector("#logDisplay");
-let calculateBtn = document.querySelector("#calculateBtn");
 
-// BUTTON EVENT LISTENERS--------------------
-buttons.forEach((button) => {
-  /**START */
-  button.addEventListener("click", (e) => {
-    // LOG DISPLAY
-    if (logDisplay.textContent == "0") {
-      logDisplay.textContent = "";
-    }
-
-    if (button.textContent == "CE") {
-      logDisplay.textContent = "0";
-      resultDisplay.textContent = "0";
-      resultDisplay.style.fontSize = "60px"
-      resultDisplay.style.padding = ".1rem 1rem"
+// ---------------------------------------------BUTTON EVENTLISTENERS-------------------------
+// ====BUTTONS====
+btns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    if(num1){
+      resultDisplay.textContent = operate(operator,Number(resultDisplay.textContent), Number(btn.textContent));
+      // resultDisplay.textContent = Number(resultDisplay.textContent) + Number(btn.textContent);
       return;
     }
-    if (button.textContent == "C") {
-      logDisplay.textContent = "0";
-      resultDisplay.textContent = "0";
-      resultDisplay.style.fontSize = "60px"
-      resultDisplay.style.padding = ".1rem 1rem"
+    if (resultDisplay.textContent == "0" && btn.textContent == "0") {
       return;
     }
-    if (button.textContent == "⬅") {
-      logDisplay.textContent = logDisplay.textContent.slice(0, -1);
-      if (logDisplay.textContent == "") logDisplay.textContent = 0;
+    if (resultDisplay.textContent == "0" && btn.textContent == ".") {
+      resultDisplay.textContent = "0.";
       return;
     }
-    logDisplay.textContent += button.textContent;
-  });
-
-  /**END */
-});
-
-// OPERATOR BUTTONS EVENT LISTENERS---------------
-operatorBtns.forEach((button) => {
-  button.addEventListener("click", (e) => {
-    /**START */
-    if (logDisplay.textContent == "") {
-      num1 = 0;
+    if (resultDisplay.textContent == "0" && btn.textContent != "0") {
+      resultDisplay.textContent = "";
     }
-    // num1 = Number(logDisplay.textContent);
-
-    operator = button.textContent;
-
-    logDisplay.textContent += ` ${operator} `;
-
-    switch (operator) {
-      case "+":
-        {
-        }
-        break;
-      case "-":
-        {
-        }
-        break;
-      case "*":
-        {
-        }
-        break;
-      case "/":
-        {
-        }
-        break;
-      case "=":
-        {
-          let index = String(logDisplay.textContent).indexOf(operator);
-          console.log(index);
-        }
-        break;
-
-      default:
-        break;
+    if (
+      btn.textContent == "." &&
+      String(resultDisplay.textContent).includes(".")
+    ) {
+      return;
     }
-
-    /**END */
+    resultDisplay.textContent += btn.textContent;
   });
 });
+// ****BUTTONS*****
 
-calculateBtn.addEventListener("click", (e) => {
-  let index = String(logDisplay.textContent).indexOf(operator);
+// ====FUNCTION BUTTONS====
+fnBtns.forEach((btn) => {
+  btn.addEventListener("click", (e) => {
+    switch (btn.textContent) {
+      case "⬅":
+        if (resultDisplay.textContent != "0") {
+          let str = String(resultDisplay.textContent);
+          resultDisplay.textContent = str.substring(0,str.length-1);
+          if (resultDisplay.textContent == "") resultDisplay.textContent = "0";
+        }
+        break;
 
-  num1 = Number(logDisplay.textContent.substring(0, index - 1));
-  num2 = Number(logDisplay.textContent.substring(index + 1));
-  result = operate(operator, num1, num2); 
+        case "CE":
+        if (resultDisplay.textContent != "0") {
+          let str = String(resultDisplay.textContent);
+          resultDisplay.textContent = str.substring(0,str.length-1);
+          if (resultDisplay.textContent == "") resultDisplay.textContent = "0";
+        }
+        break;
 
-  if(String(result).length > 9){
-    resultDisplay.style.fontSize = "30px"
-    resultDisplay.style.padding = "1.5rem 0rem"
+        case "C": /**RESET ALL */
+        resultDisplay.textContent = "0";
+        isNum1 = false;
+        logDisplay.textContent = "0";
+        num1 = undefined ;
+        num2 = undefined ;
+        break;
 
-    console.log("OVERFLOW");
-  }
-
-//   if(!(Number.isInteger(result))) result = result.toFixed(5);
-  resultDisplay.textContent = result;
-  console.log(`num1: ${num1}    num2: ${num2}`);
-  console.log(result);
+    }
+  });
 });
+// ****FUNCTION BUTTONS*****
 
-// ***==========================ADD FUNCTION==========================***
+// =====OPERATOR BUTTONS====
+operatorBtns.forEach(btn=>{
+  btn.addEventListener("click",(e)=>{
+    operator = btn.textContent;
+    num1 = resultDisplay.textContent;
+    isNum1 = true;
+    logDisplay.textContent = resultDisplay.textContent + ` ${operator} `;
+    
+  })
+})
+// *****OPERATOR BUTTONS****
+
+// ------------------------------------------BASIC MATH FUNCTIONS--------------------------
 function add(num1, num2) {
   return num1 + num2;
 }
-
-// ***==========================SUBTRUCT FUNCTION==========================***
 function subtruct(num1, num2) {
   return num1 - num2;
 }
-
-// ***==========================MULTIPLY FUNCTION==========================***
 function multiply(num1, num2) {
   return num1 * num2;
 }
-
-// ***==========================DIVIDE FUNCTION==========================***
 function divide(num1, num2) {
-  return (num1 / num2);
+  return num1 / num2;
 }
 
-// ***==========================OPERATE FUNCTION==========================***
+// -------------------------------------------------OPERATE FUNCTION-------------------
 function operate(operator, num1, num2) {
   switch (operator) {
     case "+":
@@ -139,7 +114,5 @@ function operate(operator, num1, num2) {
     case "/":
       return divide(num1, num2);
       break;
-    default:
-      return logDisplay.textContent;
   }
 }
